@@ -1,2 +1,2 @@
 # Evolution-Strategies
-The repo attempts to reproduce ES algorithm which is widely used in various RL problems.
+Distributed Implementation of Evolution Strategies as a Scalable Alternative to Reinforcement Learning (ES): https://arxiv.org/abs/1703.03864
