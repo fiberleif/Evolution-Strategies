@@ -52,7 +52,7 @@ class Worker(object):
             self.env.seed(env_seed)
         elif (env_params["type"] == "Prosthetics"):
             env = ProstheticsEnv(visualize=False, difficulty=env_params['difficulty'])
-            env = ObsProcessWrapper(env)
+            env = ObsProcessWrapper(env, True, 1)
 
         # each worker gets access to the shared noise table
         # with independent random streams for sampling
@@ -63,11 +63,11 @@ class Worker(object):
         if policy_params['type'] == 'Linear':
             self.policy = LinearPolicy(policy_params)
         else:
-            self.policy = MLPPolicy("policy", policy_params["ob_dim"], policy_params["ac_dim"], policy_params["layer_norm"], tf.nn.selu, policy_params["layer_depth"],\
-                                    policy_params["layer_width"], None)
-            
+            self.policy = MLPPolicy("policy", policy_params["ob_dim"], policy_params["ac_dim"], policy_params["layer_norm"], tf.nn.selu, policy_params["layer_depth"], policy_params["layer_width"], None)
+
         self.delta_std = delta_std
         self.rollout_length = rollout_length
+        return
 
         
     # def get_weights_plus_stats(self):
@@ -118,7 +118,7 @@ class Worker(object):
                 # deltas_idx.append(-1)
                 
                 # set to false so that evaluation rollouts are not used for updating state statistics
-                self.policy.update_filter = False
+                # self.policy.update_filter = False
 
                 # for evaluation we do not shift the rewards (shift = 0) and we use the
                 # default rollout length (1000 for the MuJoCo locomotion tasks)

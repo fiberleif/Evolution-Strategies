@@ -76,7 +76,7 @@ class MLPPolicy(object):
     """
     def __init__(self, name, obs_dim, nb_actions, layer_norm, activation, layer_num, layer_width, save_path):
         self.name = name
-        self.state_normalize = {"mean", None, "std", None}
+        self.state_normalize = {"mean":None, "std": None}
         self.obs_dim = obs_dim
         self.nb_actions = nb_actions
         self.layer_norm = layer_norm
