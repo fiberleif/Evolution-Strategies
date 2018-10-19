@@ -132,7 +132,7 @@ class MLPPolicy(object):
     #     stats = stats.items()[0][1]
 
     def act(self, ob):
-        ob = np.array(ob)
+        ob = np.array(ob).reshape(1, ob.shape[0])
         normalized_ob = (ob - self.state_normalize["mean"]) / self.state_normalize["std"]
         action = self.sess.run(self.action, feed_dict={self.obs_ph: normalized_ob})
         return action
