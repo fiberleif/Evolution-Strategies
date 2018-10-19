@@ -271,7 +271,7 @@ class ARSLearner(object):
         # print("std:", type(std))
         self.policy.set_state_normalize(mean, std)
         for i in range(self.num_workers):
-            self.workers[i].set_policy_obs_rms(mean, std)
+            self.workers[i].set_policy_obs_rms.remote(mean, std)
 
     def aggregate_rollouts(self, num_rollouts = None, evaluate = False):
         """ 
