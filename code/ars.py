@@ -265,6 +265,8 @@ class ARSLearner(object):
         runningcount = obs_weights['obs_rms/count']
         mean = runnningsum / runningcount
         std = np.sqrt(np.maximum((runningsumsq / runningcount) - np.square(mean), 1e-2))
+        print("mean:", mean)
+        print("std:", std)
         self.policy.set_state_normalize(mean, std)
 
     def aggregate_rollouts(self, num_rollouts = None, evaluate = False):
