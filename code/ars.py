@@ -76,7 +76,8 @@ class Worker(object):
     #     """
     #     assert self.policy_params['type'] == 'linear'
     #     return self.policy.get_weights_plus_stats()
-    
+    def set_policy_obs_rms(self, mean, std):
+        self.policy.set_state_normalize(mean, std)
 
     def rollout(self, shift = 0., rollout_length = None):
         """ 
@@ -236,6 +237,7 @@ class ARSLearner(object):
             # load model
             self.load_model()
         self.w_policy = self.policy.get_weights()
+
         # initialize optimization algorithm
         # self.optimizer = optimizers.SGD(self.w_policy, self.step_size)
         print("Initialization of ARS complete.")
@@ -265,9 +267,11 @@ class ARSLearner(object):
         runningcount = obs_weights['obs_rms/count']
         mean = runnningsum / runningcount
         std = np.sqrt(np.maximum((runningsumsq / runningcount) - np.square(mean), 1e-2))
-        print("mean:", mean)
-        print("std:", std)
+        # print("mean:", type(mean))
+        # print("std:", type(std))
         self.policy.set_state_normalize(mean, std)
+        for i in range(self.num_workers):
+            self.workers[i].set_policy_obs_rms(mean, std)
 
     def aggregate_rollouts(self, num_rollouts = None, evaluate = False):
         """ 
