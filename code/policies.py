@@ -70,12 +70,13 @@ class LinearPolicy(Policy):
         ob = self.observation_filter(ob, update=self.update_filter)
         return np.dot(self.weights, ob)
 
-class MLPPolicy(Policy):
+class MLPPolicy(object):
     """
     MLP policy class using tensorflow module
     """
     def __init__(self, name, obs_dim, nb_actions, layer_norm, activation, layer_num, layer_width, save_path):
         self.name = name
+        self.state_normalize = {"mean", None, "std", None}
         self.obs_dim = obs_dim
         self.nb_actions = nb_actions
         self.layer_norm = layer_norm
@@ -87,6 +88,10 @@ class MLPPolicy(Policy):
         self.init = tf.global_variables_initializer()
         self._make_session()
         self.variables = ray.experimental.TensorFlowVariables(self.action, self.sess)
+
+    def set_state_normalize(self, mean, std):
+        self.state_normalize["mean"] = mean
+        self.state_normalize["std"] = std
 
     def _build_graph(self):
         with tf.variable_scope(self.name) as scope:

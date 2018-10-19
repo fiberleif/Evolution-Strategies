@@ -63,7 +63,7 @@ class Worker(object):
         if policy_params['type'] == 'Linear':
             self.policy = LinearPolicy(policy_params)
         else:
-            self.policy = MLPPolicy("policy", policy_params["obs_dim"], policy_params["ac_dim"], policy_params["layer_norm"], tf.nn.selu, policy_params["layer_depth"],\
+            self.policy = MLPPolicy("policy", policy_params["ob_dim"], policy_params["ac_dim"], policy_params["layer_norm"], tf.nn.selu, policy_params["layer_depth"],\
                                     policy_params["layer_width"], None)
             
         self.delta_std = delta_std
@@ -231,7 +231,7 @@ class ARSLearner(object):
             self.policy = LinearPolicy(policy_params)
 
         else:
-            self.policy = MLPPolicy("policy", policy_params["obs_dim"], policy_params["ac_dim"], policy_params["layer_norm"], tf.nn.selu, policy_params["layer_depth"],\
+            self.policy = MLPPolicy("policy", policy_params["ob_dim"], policy_params["ac_dim"], policy_params["layer_norm"], tf.nn.selu, policy_params["layer_depth"],\
                                     policy_params["layer_width"], self.save_path)
             # load model
             self.load_model()
@@ -455,7 +455,7 @@ def run_ars(params):
                       'name': params['env_name']}
     elif params['env_type'] == "Prosthetics":
         env = ProstheticsEnv(visualize=False, difficulty=params['env_difficulty'])
-        env = ObsProcessWrapper(env)
+        env = ObsProcessWrapper(env, True, 1)
         ob_dim = env.observation_space.shape[0]
         ac_dim = env.action_space.shape[0]
         env_params = {'type': params['env_type'],
