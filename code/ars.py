@@ -63,7 +63,9 @@ class Worker(object):
         if policy_params['type'] == 'Linear':
             self.policy = LinearPolicy(policy_params)
         else:
-            self.policy = MLPPolicy("policy", policy_params["ob_dim"], policy_params["ac_dim"], policy_params["layer_norm"], tf.nn.selu, policy_params["layer_depth"], policy_params["layer_width"], None)
+            self.policy = MLPPolicy("policy", policy_params["ob_dim"], policy_params["ac_dim"], \
+                                    policy_params["layer_norm"], tf.nn.selu, policy_params["layer_depth"], \
+                                    policy_params["layer_width"], None)
 
         self.delta_std = delta_std
         self.rollout_length = rollout_length
