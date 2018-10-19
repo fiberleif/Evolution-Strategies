@@ -51,8 +51,8 @@ class Worker(object):
             self.env = gym.make(env_params["name"])
             self.env.seed(env_seed)
         elif (env_params["type"] == "Prosthetics"):
-            env = ProstheticsEnv(visualize=False, difficulty=env_params['difficulty'])
-            env = ObsProcessWrapper(env, True, 1)
+            self.env = ProstheticsEnv(visualize=False, difficulty=env_params['difficulty'])
+            self.env = ObsProcessWrapper(self.env, True, 1)
 
         # each worker gets access to the shared noise table
         # with independent random streams for sampling
