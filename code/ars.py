@@ -94,7 +94,8 @@ class Worker(object):
         ob = self.env.reset()
         for i in range(rollout_length):
             action = self.policy.act(ob)
-            ob, reward, done, _ = self.env.step(action.tolist())
+            print(action.shape)
+            ob, reward, done, _ = self.env.step(action.flatten())
             steps += 1
             total_reward += (reward - shift)
             if done:
