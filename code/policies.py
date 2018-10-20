@@ -4,7 +4,7 @@ Horia Mania --- hmania@berkeley.edu
 Aurelia Guy
 Benjamin Recht 
 '''
-
+import os
 import ray
 import numpy as np
 import tensorflow as tf
@@ -120,6 +120,8 @@ class MLPPolicy(object):
         return self.variables.get_weights()
 
     def save_weights_plus_stats(self):
+        if not (os.path.exists("es_model")):
+            os.makedirs("es_model")
         self.saver = tf.train.Saver()
         self.saver.save(self.sess, "./es_model/model.ckpt")
 
