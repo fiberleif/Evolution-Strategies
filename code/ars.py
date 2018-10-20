@@ -191,7 +191,8 @@ class ARSLearner(object):
                  step_size=0.01,
                  shift='constant zero',
                  params=None,
-                 seed=123):
+                 seed=123,
+                 eval_num=5):
 
         logz.configure_output_dir(logdir)
         logz.save_params(params)
@@ -211,6 +212,7 @@ class ARSLearner(object):
         self.params = params
         self.max_past_avg_reward = float('-inf')
         self.num_episodes_used = float('inf')
+        self.eval_num = eval_num
 
         
         # create shared table for storing noise
@@ -431,7 +433,7 @@ class ARSLearner(object):
 
     def evaluate(self, start, i):
 
-        rewards = self.aggregate_rollouts(num_rollouts=2, evaluate=True)
+        rewards = self.aggregate_rollouts(num_rollouts=self.eval_num, evaluate=True)
         # w = ray.get(self.workers[0].get_weights_plus_stats.remote())
         # np.savez(self.logdir + "/lin_policy_plus", w)
 
@@ -501,7 +503,8 @@ def run_ars(params):
                      rollout_length=params['rollout_length'],
                      shift=params['shift'],
                      params=params,
-                     seed = params['seed'])
+                     seed = params['seed'],
+                     eval_num = params['eval_num'])
         
     ARS.train(params['n_iter'])
        
@@ -541,6 +544,7 @@ if __name__ == '__main__':
     # for ARS V1 use filter = 'NoFilter'
     parser.add_argument('--filter', type=str, default='MeanStdFilter')
 
+    parser.add_argument('--eval_num', type=int, default=5)
     parser.add_argument('--dir_path', type=str, default='log')
     parser.add_argument('--model_path', type=str, default=None)
     parser.add_argument('--save_path', type=str, default=None)
