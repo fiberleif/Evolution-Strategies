@@ -529,7 +529,7 @@ if __name__ == '__main__':
     parser.add_argument('--n_iter', '-n', type=int, default=1)
     parser.add_argument('--n_directions', '-nd', type=int, default=4)
     parser.add_argument('--deltas_used', '-du', type=int, default=8)
-    parser.add_argument('--step_size', '-s', type=float, default=0.002)
+    parser.add_argument('--step_size', '-s', type=float, default=0.0003)
     parser.add_argument('--delta_std', '-std', type=float, default=.0002)
     parser.add_argument('--n_workers', '-e', type=int, default=8)
     parser.add_argument('--rollout_length', '-r', type=int, default=1000)
