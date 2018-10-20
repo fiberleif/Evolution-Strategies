@@ -121,7 +121,7 @@ class MLPPolicy(object):
 
     def save_weights_plus_stats(self):
         self.saver = tf.train.Saver()
-        self.saver.save(self.sess, "./model/model.ckpt")
+        self.saver.save(self.sess, "./es_model/model.ckpt")
 
         mu, std = self.observation_filter.get_stats()
         aux = np.asarray([mu, std])
