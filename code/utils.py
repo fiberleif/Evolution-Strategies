@@ -3,6 +3,11 @@
 
 import numpy as np
 
+def get_difficulty(round):
+    difficulty = 1 if round == 2 else 0
+    return difficulty
+
+
 def itergroups(items, group_size):
     assert group_size >= 1
     group = []

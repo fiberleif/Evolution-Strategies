@@ -27,9 +27,10 @@ import optimizers
 from policies import *
 from shared_noise import *
 from observation import ObsProcessWrapper, RewardReshapeWrapper, DictToListFull
+from utils import get_difficulty
 
 env_type_choices = ["MuJoCo", "Atari", "Prosthetics"]
-env_difficulty_choices = [1, 2]
+round_choices = [1, 2]
 policy_type_choices = ["Linear", "MLP"]
 
 
@@ -51,7 +52,7 @@ class Worker(object):
             self.env = gym.make(env_params["name"])
             self.env.seed(env_seed)
         elif (env_params["type"] == "Prosthetics"):
-            self.env = ProstheticsEnv(visualize=False, difficulty=env_params['difficulty'])
+            self.env = ProstheticsEnv(visualize=False, difficulty=get_difficulty(env_params['round']))
             self.env = ObsProcessWrapper(self.env, True, 1)
 
         # each worker gets access to the shared noise table
@@ -466,12 +467,12 @@ def run_ars(params):
         env_params = {'type': params['env_type'],
                       'name': params['env_name']}
     elif params['env_type'] == "Prosthetics":
-        env = ProstheticsEnv(visualize=False, difficulty=params['env_difficulty'])
+        env = ProstheticsEnv(visualize=False, difficulty=get_difficulty(params['round']))
         env = ObsProcessWrapper(env, True, 1)
         ob_dim = env.observation_space.shape[0]
         ac_dim = env.action_space.shape[0]
         env_params = {'type': params['env_type'],
-                      'difficulty': params['env_difficulty']}
+                      'round': params['round']}
     else:
         raise NotImplementedError
 
@@ -522,7 +523,7 @@ if __name__ == '__main__':
     # ------
 
     # ------ arguments used when env_type = "Prosthetics"
-    parser.add_argument('--env_difficulty', choices=env_difficulty_choices, default=1)
+    parser.add_argument('--round', choices=round_choices, default=1)
     # ------
 
     parser.add_argument('--n_iter', '-n', type=int, default=1)

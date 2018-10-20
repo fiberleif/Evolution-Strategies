@@ -11,7 +11,7 @@ from policies import *
 #     set_global_seeds,
 #     boolean_flag,
 # )
-from util import get_difficulty
+from utils import get_difficulty
 from observation import ObsProcessWrapper, RewardReshapeWrapper
 remote_base = ["http://grader.crowdai.org:1729", "http://grader.crowdai.org:1730"]
 crowdai_token = "ac4a9c1e83a4b2e6d6d7df408b4e7519"
