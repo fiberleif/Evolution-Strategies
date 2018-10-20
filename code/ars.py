@@ -362,7 +362,7 @@ class ARSLearner(object):
                                                        for idx in deltas_idx[name]),
                                                       batch_size = 500)
             g_hat /= len(deltas_idx[name])
-            print("{0}-Euclidean norm of update step:".format(name), np.linalg.norm(g_hat))
+            print("{0}-Euclidean norm of update step:".format(name), np.linalg.norm(g_hat * self.step_size))
             self.w_policy[name] += g_hat.reshape(self.w_policy[name].shape) * self.step_size
         self.policy.update_weights(self.w_policy)
         t2 = time.time()
