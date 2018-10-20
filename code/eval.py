@@ -104,7 +104,7 @@ if __name__ == '__main__':
     bool_mapper = lambda str: True if 'True' in str or 'true' in str else False
     parser.add_argument('--online', type=bool_mapper, default=False)
     parser.add_argument('--visualize', type=bool_mapper, default=False)
-    parser.add_argument('--model', nargs='+', type="./es_model/model.ckpt")
+    parser.add_argument('--model', type=str, default="./es_model/model.ckpt")
     parser.add_argument('--obs_rms', type="./obs_rms")
     parser.add_argument('--round', type=int, default=1, choices=[1, 2])
     # parse
