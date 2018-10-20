@@ -361,6 +361,7 @@ class ARSLearner(object):
                                                        for idx in deltas_idx[name]),
                                                       batch_size = 500)
             g_hat /= len(deltas_idx[name])
+            print("{0}-Euclidean norm of update step:".format(name), np.linalg.norm(g_hat))
             self.w_policy[name] += g_hat.reshape(self.w_policy[name].shape) * self.step_size
         self.policy.update_weights(self.w_policy)
         t2 = time.time()
@@ -524,7 +525,7 @@ if __name__ == '__main__':
     parser.add_argument('--env_difficulty', choices=env_difficulty_choices, default=1)
     # ------
 
-    parser.add_argument('--n_iter', '-n', type=int, default=3)
+    parser.add_argument('--n_iter', '-n', type=int, default=1)
     parser.add_argument('--n_directions', '-nd', type=int, default=4)
     parser.add_argument('--deltas_used', '-du', type=int, default=8)
     parser.add_argument('--step_size', '-s', type=float, default=0.002)

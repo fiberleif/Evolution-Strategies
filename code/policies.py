@@ -122,7 +122,7 @@ class MLPPolicy(object):
     def save_weights_plus_stats(self):
         if not (os.path.exists("es_model")):
             os.makedirs("es_model")
-        self.saver = tf.train.Saver()
+        self.saver = tf.train.Saver(self.trainable_vars)
         self.saver.save(self.sess, "./es_model/model.ckpt")
 
         mu, std = self.observation_filter.get_stats()
