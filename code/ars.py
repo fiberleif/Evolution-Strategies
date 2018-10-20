@@ -399,14 +399,14 @@ class ARSLearner(object):
 
     def train(self, num_iter):
         start = time.time()
+        self.evaluate(start, -1)
         for i in range(num_iter):
-            self.evaluate(start, i)
             t1 = time.time()
             self.train_step()
             t2 = time.time()
             print('total time of one step', t2 - t1)           
             print('iter ', i,' done')
-
+            self.evaluate(start, i)
             # record statistics every 10 iterations
             # if ((i + 1) % 1 == 0):
 
