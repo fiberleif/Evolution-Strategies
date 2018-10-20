@@ -127,7 +127,7 @@ class MLPPolicy(object):
 
         # mu, std = self.observation_filter.get_stats()
         aux = np.asarray([self.state_normalize["mean"], self.state_normalize["std"]])
-        np.savez(self.save_path + "./obs_rms", aux)
+        np.savez("./obs_rms", aux)
 
     # def load_weights_plus_stats(self):
     #     stats = np.load('./obs_rms.npz')
