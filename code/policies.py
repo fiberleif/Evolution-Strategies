@@ -139,6 +139,7 @@ class MLPPolicy(object):
         normalized_ob = (ob - self.state_normalize["mean"]) / self.state_normalize["std"]
         clip_ob = np.clip(normalized_ob, self.observation_range[0], self.observation_range[1])
         action = self.sess.run(self.action, feed_dict={self.obs_ph: clip_ob})
+        action = action.flatten()
         return action
 
     @property
