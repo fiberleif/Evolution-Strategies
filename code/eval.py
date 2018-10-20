@@ -92,8 +92,8 @@ def run(online, model, obs_rms, round, visualize):
                 episode_r += r
             else:
                 break
-        print('Episode Done: total reward()'.format(episode_r))
-    print('Eval End: total reward {}'.format(total_r / 2))
+        print('Episode Done: total reward {0}'.format(episode_r))
+    print('Eval End: total reward {0}'.format(total_r / 2))
     if online:
         env.unwrapped.client.submit()
 
