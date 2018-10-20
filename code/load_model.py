@@ -25,5 +25,5 @@ def load_model(model_path):
     for weight, weight_after_set in zip(actor_weights.values(), actor_weights_after_set.values()):
         print((weight==weight_after_set).all())
 
-model_path = r"../model/DDPG_layer-width-128_activation-selu_seed-1-2018-10-09-05-12-44-1/best"
+model_path = "../model/DDPG_layer-width-128_activation-selu_seed-1-2018-10-09-05-12-44-1/best"
 load_model(model_path)
