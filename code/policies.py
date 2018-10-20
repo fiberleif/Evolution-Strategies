@@ -77,6 +77,7 @@ class MLPPolicy(object):
     def __init__(self, name, obs_dim, nb_actions, layer_norm, activation, layer_num, layer_width, save_path):
         self.name = name
         self.state_normalize = {"mean": None, "std": None}
+        self.observation_range = (-5., 5.)
         self.obs_dim = obs_dim
         self.nb_actions = nb_actions
         self.layer_norm = layer_norm
@@ -136,7 +137,8 @@ class MLPPolicy(object):
     def act(self, ob):
         ob = np.array(ob).reshape(1, len(ob))
         normalized_ob = (ob - self.state_normalize["mean"]) / self.state_normalize["std"]
-        action = self.sess.run(self.action, feed_dict={self.obs_ph: normalized_ob})
+        clip_ob = np.clip(normalized_ob, self.observation_range[0], self.observation_range[1])
+        action = self.sess.run(self.action, feed_dict={self.obs_ph: clip_ob})
         return action
 
     @property
