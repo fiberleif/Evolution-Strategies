@@ -214,7 +214,7 @@ class ARSLearner(object):
         self.max_past_avg_reward = float('-inf')
         self.num_episodes_used = float('inf')
         self.eval_num = eval_num
-
+        self.best_score = -np.inf
         
         # create shared table for storing noise
         print("Creating deltas table.")
@@ -340,6 +340,8 @@ class ARSLearner(object):
 
         if evaluate:
             return rollout_rewards
+        else:
+            return [deltas_idx, rollout_rewards]
 
         # # select top performing directions if deltas_used < num_deltas
         # max_rewards = np.max(rollout_rewards, axis = 1)
@@ -352,21 +354,6 @@ class ARSLearner(object):
         
         # normalize rewards by their standard deviation
         # rollout_rewards /= np.std(rollout_rewards)
-        rollout_rewards = self.compute_centered_ranks(rollout_rewards)
-
-        t1 = time.time()
-        # aggregate rollouts to form g_hat, the gradient used to compute SGD step
-        for name in deltas_idx.keys():
-            g_hat, count = utils.batched_weighted_sum(rollout_rewards[:,0] - rollout_rewards[:,1],
-                                                      (self.deltas.get(idx, self.w_policy[name].size)
-                                                       for idx in deltas_idx[name]),
-                                                      batch_size = 500)
-            g_hat /= len(deltas_idx[name])
-            print("{0}-Euclidean norm of update step:".format(name), np.linalg.norm(g_hat * self.step_size))
-            self.w_policy[name] += g_hat.reshape(self.w_policy[name].shape) * self.step_size
-        self.policy.update_weights(self.w_policy)
-        t2 = time.time()
-        print('time to aggregate rollouts', t2 - t1)
 
         # print("Euclidean norm of update step:", np.linalg.norm(g_hat))
         # self.w_policy -= self.optimizer._compute_step(g_hat).reshape(self.w_policy.shape)
@@ -395,7 +382,23 @@ class ARSLearner(object):
         # g_hat = self.aggregate_rollouts()
         # print("Euclidean norm of update step:", np.linalg.norm(g_hat))
         # self.w_policy -= self.optimizer._compute_step(g_hat).reshape(self.w_policy.shape)
-        self.aggregate_rollouts()
+
+        deltas_idx, rollout_rewards = self.aggregate_rollouts()
+        rollout_rewards = self.compute_centered_ranks(rollout_rewards)
+        t1 = time.time()
+        # aggregate rollouts to form g_hat, the gradient used to compute SGD step
+        for name in deltas_idx.keys():
+            g_hat, count = utils.batched_weighted_sum(rollout_rewards[:,0] - rollout_rewards[:,1],
+                                                      (self.deltas.get(idx, self.w_policy[name].size)
+                                                       for idx in deltas_idx[name]),
+                                                      batch_size = 500)
+            g_hat /= len(deltas_idx[name])
+            print("{0}-Euclidean norm of update step:".format(name), np.linalg.norm(g_hat * self.step_size))
+            self.w_policy[name] += g_hat.reshape(self.w_policy[name].shape) * self.step_size
+        self.policy.update_weights(self.w_policy)
+        t2 = time.time()
+        print('time to aggregate rollouts', t2 - t1)
+
         return
 
     def train(self, num_iter):
@@ -430,7 +433,7 @@ class ARSLearner(object):
             # ray.get(increment_filters_ids)
             # t2 = time.time()
             # print('Time to sync statistics:', t2 - t1)
-        self.policy.save_weights_plus_stats()
+        # self.policy.save_weights_plus_stats()
         return
 
     def evaluate(self, start, i):
@@ -449,6 +452,11 @@ class ARSLearner(object):
         logz.log_tabular("timesteps", self.timesteps)
         logz.dump_tabular()
 
+        # save model if current model exceeds best model yet.
+        current_score = np.mean(rewards)
+        if (current_score > self.best_score):
+            self.policy.save_weights_plus_stats()
+            self.best_score = current_score
 
 def run_ars(params):
 
