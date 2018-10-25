@@ -531,7 +531,7 @@ if __name__ == '__main__':
     # ------
 
     # ------ arguments used when env_type = "Prosthetics"
-    parser.add_argument('--round', choices=round_choices, default=1)
+    parser.add_argument('--round', type=int, choices=round_choices, default=1)
     # ------
 
     parser.add_argument('--n_iter', '-n', type=int, default=1)
